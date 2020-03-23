@@ -8,11 +8,11 @@ class TransferList extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return TransferListState();
+    return _TransferListState();
   }
 }
 
-class TransferListState extends State<TransferList> {
+class _TransferListState extends State<TransferList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

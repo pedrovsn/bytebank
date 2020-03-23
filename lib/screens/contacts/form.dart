@@ -1,45 +1,54 @@
 import 'package:bytebank/components/byte_textfield.dart';
-import 'package:bytebank/models/transfer.dart';
+import 'package:bytebank/database/dao/contact_dao.dart';
+import 'package:bytebank/models/contact.dart';
 import 'package:flutter/material.dart';
 
-class TransferForm extends StatelessWidget {
-  final TextEditingController _usernameController = TextEditingController();
+class ContactForm extends StatefulWidget {
+  @override
+  _ContactFormState createState() => _ContactFormState();
+}
 
-  final TextEditingController _valueController = TextEditingController();
+class _ContactFormState extends State<ContactForm> {
+  final ContactDAO _dao = ContactDAO();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _nicknameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Novo contato'),
+      ),
       body: Column(
         children: <Widget>[
           ByteTextField(
             _usernameController,
             label: 'Nome do usuário',
-            hint: 'nickymorim',
+            hint: 'Nicole',
           ),
           ByteTextField(
-            _valueController,
-            label: 'Valor da transferência',
-            hint: '100.00',
-            iconData: Icons.monetization_on,
+            _nicknameController,
+            label: 'Nickname',
+            hint: 'nickymorim',
           ),
-          Container(
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              width: double.maxFinite,
               child: RaisedButton(
-            child: Text('Confirmar'),
-            onPressed: () {
-              String username = _usernameController.text;
-              double value = double.tryParse(_valueController.text);
+                child: Text('Create'),
+                onPressed: () {
+                  final String name = _usernameController.text;
+                  final String nickname = _nicknameController.text;
 
-              if (username != null && value != null) {
-                Transfer transfer = Transfer(value, username);
-                Navigator.pop(context, transfer);
-              }
-            },
-          ))
+                  _dao
+                      .save(Contact(name, nickname))
+                      .then((id) => Navigator.pop(context));
+                },
+              ),
+            ),
+          )
         ],
-      ),
-      appBar: AppBar(
-        title: Text('Nova transferência'),
       ),
     );
   }

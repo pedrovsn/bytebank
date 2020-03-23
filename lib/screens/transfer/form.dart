@@ -3,7 +3,7 @@ import 'package:bytebank/models/transfer.dart';
 import 'package:flutter/material.dart';
 
 class TransferForm extends StatelessWidget {
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _nicknameController = TextEditingController();
 
   final TextEditingController _valueController = TextEditingController();
 
@@ -13,8 +13,8 @@ class TransferForm extends StatelessWidget {
       body: Column(
         children: <Widget>[
           ByteTextField(
-            _usernameController,
-            label: 'Nome do usuário',
+            _nicknameController,
+            label: 'Nickname do contato',
             hint: 'nickymorim',
           ),
           ByteTextField(
@@ -22,12 +22,13 @@ class TransferForm extends StatelessWidget {
             label: 'Valor da transferência',
             hint: '100.00',
             iconData: Icons.monetization_on,
+            textInputType: TextInputType.number,
           ),
           Container(
               child: RaisedButton(
             child: Text('Confirmar'),
             onPressed: () {
-              String username = _usernameController.text;
+              String username = _nicknameController.text;
               double value = double.tryParse(_valueController.text);
 
               if (username != null && value != null) {

@@ -1,3 +1,4 @@
+import 'package:bytebank/screens/contacts/list.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatelessWidget {
@@ -17,26 +18,33 @@ class Dashboard extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Container(
-              height: 100,
-              width: 180,
+            child: Material(
               color: Theme.of(context).primaryColor,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Icon(
-                      Icons.people,
-                      color: Colors.white,
-                      size: 24,
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ContactList()));
+                },
+                child: Container(
+                  height: 100,
+                  width: 180,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Icon(
+                          Icons.people,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                        Text(
+                          'Contacts',
+                          style: TextStyle(color: Colors.white, fontSize: 16.0),
+                        )
+                      ],
                     ),
-                    Text(
-                      'Contacts',
-                      style: TextStyle(color: Colors.white, fontSize: 16.0),
-                    )
-                  ],
+                  ),
                 ),
               ),
             ),

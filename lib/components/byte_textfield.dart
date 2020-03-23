@@ -6,8 +6,9 @@ class ByteTextField extends StatelessWidget {
   final String label;
   final String hint;
   final IconData iconData;
+  final TextInputType textInputType;
 
-  ByteTextField(this.controller, {this.label, this.hint, this.iconData});
+  ByteTextField(this.controller, {this.label, this.hint, this.iconData, this.textInputType});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class ByteTextField extends StatelessWidget {
             labelText: label,
             hintText: hint,
             icon: iconData != null ? Icon(iconData) : null),
-        keyboardType: TextInputType.number,
+        keyboardType: textInputType != null ? textInputType : TextInputType.text,
       ),
     );
   }
