@@ -1,4 +1,5 @@
 import 'package:bytebank/components/byte_textfield.dart';
+import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/models/transfer.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +33,7 @@ class TransferForm extends StatelessWidget {
               double value = double.tryParse(_valueController.text);
 
               if (username != null && value != null) {
-                Transfer transfer = Transfer(value, username);
+                Transfer transfer = Transfer(value, Contact('', username));
                 Navigator.pop(context, transfer);
               }
             },

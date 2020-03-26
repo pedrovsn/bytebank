@@ -1,10 +1,12 @@
+import 'package:bytebank/models/contact.dart';
+
 class Transfer {
   final double _value;
-  final String _account;
+  final Contact _contact;
 
-  Transfer(this._value, this._account);
+  Transfer(this._value, this._contact);
 
   get value => this._value;
 
-  get account => this._account;
+  get contact => this._contact;
 }

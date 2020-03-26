@@ -1,11 +1,10 @@
+import 'package:bytebank/http/transferWebClient.dart';
 import 'package:bytebank/models/transfer.dart';
 import 'package:bytebank/screens/transfer/form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class TransferList extends StatefulWidget {
-  final List<Transfer> _transfers = [];
-
   @override
   State<StatefulWidget> createState() {
     return _TransferListState();
@@ -16,12 +15,37 @@ class _TransferListState extends State<TransferList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListView.builder(
-          itemCount: widget._transfers.length,
-          itemBuilder: (context, index) {
-            final transfer = widget._transfers[index];
-            return TransferItem(transfer);
-          }),
+      body: FutureBuilder<List<Transfer>>(
+        future: findAll(),
+        builder: (context, snapshot) {
+          final List<Transfer> transfers = snapshot.data;
+
+          switch(snapshot.connectionState) {
+
+            case ConnectionState.none:
+              break;
+            case ConnectionState.waiting:
+              return Center(
+                child: Column(
+                  children: <Widget>[
+                    CircularProgressIndicator(),
+                    Text('Carregando')
+                  ],
+                ),
+              );
+            case ConnectionState.active:
+              break;
+            case ConnectionState.done:
+              return ListView.builder(
+                  itemCount: transfers.length,
+                  itemBuilder: (context, index) {
+                    final transfer = transfers[index];
+                    return TransferItem(transfer);
+                  });
+          }
+          return Text('Erro desconhecido');
+        },
+      ),
       appBar: AppBar(
         title: Text('Transferências'),
       ),
@@ -31,10 +55,10 @@ class _TransferListState extends State<TransferList> {
           final Future<Transfer> future =
               Navigator.push(context, MaterialPageRoute(builder: (context) {
             return TransferForm();
-          // ignore: missing_return
+            // ignore: missing_return
           })).then((receivedTransfer) {
             setState(() {
-              widget._transfers.add(receivedTransfer);
+//              widget._transfers.add(receivedTransfer);
             });
           });
         },
@@ -54,7 +78,7 @@ class TransferItem extends StatelessWidget {
       child: ListTile(
         leading: Icon(Icons.monetization_on),
         title: Text(_transfer.value.toString()),
-        subtitle: Text(_transfer.account),
+        subtitle: Text(_transfer.contact.name),
       ),
     );
   }
