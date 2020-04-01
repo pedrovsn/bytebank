@@ -1,6 +1,6 @@
-import 'package:bytebank/http/transferWebClient.dart';
+import 'package:bytebank/components/centered_message.dart';
+import 'package:bytebank/http/clients/transferWebClient.dart';
 import 'package:bytebank/models/transfer.dart';
-import 'package:bytebank/screens/transfer/form.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -12,16 +12,17 @@ class TransferList extends StatefulWidget {
 }
 
 class _TransferListState extends State<TransferList> {
+  final TransferWebClient _transferWebClient = TransferWebClient();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder<List<Transfer>>(
-        future: findAll(),
+        future: _transferWebClient.findAll(),
         builder: (context, snapshot) {
           final List<Transfer> transfers = snapshot.data;
 
-          switch(snapshot.connectionState) {
-
+          switch (snapshot.connectionState) {
             case ConnectionState.none:
               break;
             case ConnectionState.waiting:
@@ -29,39 +30,33 @@ class _TransferListState extends State<TransferList> {
                 child: Column(
                   children: <Widget>[
                     CircularProgressIndicator(),
-                    Text('Carregando')
+                    Text('Loading')
                   ],
                 ),
               );
             case ConnectionState.active:
               break;
             case ConnectionState.done:
-              return ListView.builder(
-                  itemCount: transfers.length,
-                  itemBuilder: (context, index) {
-                    final transfer = transfers[index];
-                    return TransferItem(transfer);
-                  });
+              if (snapshot.hasData) {
+                if (transfers.isNotEmpty) {
+                  return ListView.builder(
+                      itemCount: transfers.length,
+                      itemBuilder: (context, index) {
+                        final transfer = transfers[index];
+                        return TransferItem(transfer);
+                      });
+                }
+              }
+              return CenteredMessage(
+                'No transactions found',
+                icon: Icons.warning,
+              );
           }
-          return Text('Erro desconhecido');
+          return CenteredMessage('Unknow error');
         },
       ),
       appBar: AppBar(
-        title: Text('Transferências'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          final Future<Transfer> future =
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return TransferForm();
-            // ignore: missing_return
-          })).then((receivedTransfer) {
-            setState(() {
-//              widget._transfers.add(receivedTransfer);
-            });
-          });
-        },
+        title: Text('Transfers'),
       ),
     );
   }

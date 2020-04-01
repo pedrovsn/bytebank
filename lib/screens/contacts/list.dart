@@ -1,7 +1,7 @@
-import 'package:bytebank/database/app_database.dart';
 import 'package:bytebank/database/dao/contact_dao.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/screens/contacts/form.dart';
+import 'package:bytebank/screens/transfer/form.dart';
 import 'package:flutter/material.dart';
 
 class ContactList extends StatelessWidget {
@@ -11,7 +11,7 @@ class ContactList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Contatos'),
+        title: Text('Contacts'),
       ),
       body: FutureBuilder<List<Contact>>(
         initialData: List(),
@@ -25,7 +25,7 @@ class ContactList extends StatelessWidget {
                 child: Column(
                   children: <Widget>[
                     CircularProgressIndicator(),
-                    Text('Carregando')
+                    Text('Loading')
                   ],
                 ),
               );
@@ -35,15 +35,24 @@ class ContactList extends StatelessWidget {
             case ConnectionState.done:
               final List<Contact> contactList = snapshot.data;
 
-              return ListView.builder (
+              return ListView.builder(
                 itemBuilder: (context, index) {
                   final Contact contact = contactList[index];
-                  return _ContactItem(contact);
+                  return _ContactItem(
+                    contact,
+                    onClick: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => TransferForm(contact),
+                        ),
+                      );
+                    },
+                  );
                 },
                 itemCount: contactList.length,
               );
           }
-          return Text('Erro desconhecido');
+          return Text('Unknow error');
         },
       ),
       floatingActionButton: FloatingActionButton(
@@ -62,8 +71,9 @@ class ContactList extends StatelessWidget {
 
 class _ContactItem extends StatelessWidget {
   final Contact _contact;
+  final Function onClick;
 
-  _ContactItem(this._contact);
+  _ContactItem(this._contact, {@required this.onClick});
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +81,7 @@ class _ContactItem extends StatelessWidget {
       children: <Widget>[
         Card(
           child: ListTile(
+            onTap: () => onClick(),
             title: Text(_contact.name),
             subtitle: Text(_contact.nickname),
           ),

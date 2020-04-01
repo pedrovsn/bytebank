@@ -1,47 +1,73 @@
 import 'package:bytebank/components/byte_textfield.dart';
+import 'package:bytebank/http/clients/transferWebClient.dart';
 import 'package:bytebank/models/contact.dart';
 import 'package:bytebank/models/transfer.dart';
+import 'package:bytebank/screens/transfer/list.dart';
 import 'package:flutter/material.dart';
 
-class TransferForm extends StatelessWidget {
-  final TextEditingController _nicknameController = TextEditingController();
+class TransferForm extends StatefulWidget {
+  final Contact contact;
 
+  TransferForm(this.contact);
+
+  @override
+  _TransferFormState createState() => _TransferFormState();
+}
+
+class _TransferFormState extends State<TransferForm> {
   final TextEditingController _valueController = TextEditingController();
+  final TransferWebClient _transferWebClient = TransferWebClient();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: <Widget>[
-          ByteTextField(
-            _nicknameController,
-            label: 'Nickname do contato',
-            hint: 'nickymorim',
+          Text(
+            widget.contact.name,
+            style: TextStyle(
+              fontSize: 24
+            ),
           ),
-          ByteTextField(
-            _valueController,
-            label: 'Valor da transferência',
-            hint: '100.00',
-            iconData: Icons.monetization_on,
-            textInputType: TextInputType.number,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              widget.contact.name,
+              style: TextStyle(
+                  fontSize: 32
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ByteTextField(
+              _valueController,
+              label: 'Value',
+              hint: '100',
+            ),
           ),
           Container(
               child: RaisedButton(
-            child: Text('Confirmar'),
+            child: Text('Confirm'),
             onPressed: () {
-              String username = _nicknameController.text;
               double value = double.tryParse(_valueController.text);
 
-              if (username != null && value != null) {
-                Transfer transfer = Transfer(value, Contact('', username));
-                Navigator.pop(context, transfer);
+              if (value != null) {
+                Transfer transfer = Transfer(value, widget.contact);
+                _transferWebClient.save(transfer).then((saved) {
+                  if(saved != null){
+                    Navigator.pop(context);
+                  }else {
+
+                  }
+                });
               }
             },
           ))
         ],
       ),
       appBar: AppBar(
-        title: Text('Nova transferência'),
+        title: Text('New transfer'),
       ),
     );
   }

@@ -1,15 +1,15 @@
-import 'package:bytebank/http/transferWebClient.dart';
+import 'package:bytebank/http/clients/transferWebClient.dart';
 import 'package:bytebank/screens/dashboard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'models/contact.dart';
+import 'models/transfer.dart';
 
 void main() {
   runApp(
     ByteBankApp(),
   );
-  findAll().then((nes) => {
-    print('new transactions -> $nes')
-  });
 }
 
 class ByteBankApp extends StatelessWidget {

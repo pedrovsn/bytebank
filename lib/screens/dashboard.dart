@@ -19,10 +19,10 @@ class Dashboard extends StatelessWidget {
           ),
           Row(
             children: <Widget>[
-              _FeatureItem('Transferir', iconData: Icons.people, onTap: () => {
+              _FeatureItem('Contacts', iconData: Icons.people, onTap: () => {
                 _showContactList(context)
               },),
-              _FeatureItem('Histórico', iconData: Icons.history, onTap: () => {
+              _FeatureItem('History', iconData: Icons.history, onTap: () => {
                 _showHistory(context)
               },)
             ],

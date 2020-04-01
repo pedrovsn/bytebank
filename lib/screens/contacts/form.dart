@@ -17,18 +17,18 @@ class _ContactFormState extends State<ContactForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Novo contato'),
+        title: Text('New contact'),
       ),
       body: Column(
         children: <Widget>[
           ByteTextField(
             _usernameController,
-            label: 'Nome do usuário',
+            label: 'Name',
             hint: 'Nicole',
           ),
           ByteTextField(
             _nicknameController,
-            label: 'Nickname',
+            label: 'nickname',
             hint: 'nickymorim',
           ),
           Padding(
